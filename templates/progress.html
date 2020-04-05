@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script>
+		var source = new EventSource("/progress/{{video}}/{{image}}");
+		source.onmessage = function (event) {
+			data = JSON.parse(event.data);
+			if (data.type == 'download') {
+				source.close();
+				window.location.href = data.url;
+			}
+			else if (data.type == 'update') {
+				$("#" + data.field).attr("value", (data.iteration + 1) / data.total);
+
+			}
+		}
+	</script>
+</head>
+<style>
+	* {
+		font-size: 2vw;
+	}
+
+	.container {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		-moz-transform: translateX(-50%) translateY(-50%);
+		-webkit-transform: translateX(-50%) translateY(-50%);
+		transform: translateX(-50%) translateY(-50%);
+	}
+</style>
+
+<body>
+	<div class="container">
+		<table border="0">
+			<tr>
+				<td>
+					<label for="extract_keypoints">Keypoints:</label>
+
+				</td>
+				<td>
+					<progress id="extract_keypoints" max="1.0" value="0.0"></progress>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="compute_alignment">Alignment:</label>
+				</td>
+				<td>
+					<progress id="compute_alignment" max="1.0" value="0.0"></progress>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="warp">Warping:</label>
+				</td>
+				<td>
+					<progress id="warp" max="1.0" value="0.0"></progress>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="morphed">Morphing:</label>
+				</td>
+				<td>
+					<progress id="morphed" max="1.0" value="0.0"></progress>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="result">Deepfaking:</label>
+
+				</td>
+				<td>
+					<progress id="result" max="1.0" value="0.0"></progress>
+				</td>
+			</tr>
+		</table>
+
+	</div>
+</body>
+
+</html>
